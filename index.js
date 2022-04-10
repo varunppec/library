@@ -1,3 +1,25 @@
+import {initializeApp} from 'firebase/app';
+
+const firebaseConfig = {
+
+    apiKey: "AIzaSyDwYZUhtawHiR86Alb0fuYC4ZswUxWqOyw",
+  
+    authDomain: "library-f10d9.firebaseapp.com",
+  
+    projectId: "library-f10d9",
+  
+    storageBucket: "library-f10d9.appspot.com",
+  
+    messagingSenderId: "1036671491527",
+  
+    appId: "1:1036671491527:web:8df0ae67f4306ae6d9cde2",
+  
+    measurementId: "G-NZSP6F05F8"
+  
+  };
+  const app = initializeApp(firebaseConfig);
+  
+
 let myLibrary = [];
 let properties = ['name', 'author', 'pages', 'read'];
 const container = document.querySelector('.book-container');
