@@ -1,17 +1,49 @@
+import { initializeApp } from "firebase/app";
+import { getDatabase, onValue, ref, set } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDwYZUhtawHiR86Alb0fuYC4ZswUxWqOyw",
+
+  authDomain: "library-f10d9.firebaseapp.com",
+
+  databaseURL:
+    "https://library-f10d9-default-rtdb.asia-southeast1.firebasedatabase.app/",
+
+  projectId: "library-f10d9",
+
+  storageBucket: "library-f10d9.appspot.com",
+
+  messagingSenderId: "1036671491527",
+
+  appId: "1:1036671491527:web:8df0ae67f4306ae6d9cde2",
+
+  measurementId: "G-NZSP6F05F8",
+};
+
+// Initialize Firebase
+
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
 let myLibrary = [];
 let properties = ["name", "author", "pages", "read"];
 const container = document.querySelector(".book-container");
 const form = document.querySelector(".form");
+const test = ref(database);
+onValue(test, (snapshot) => {
+  const data = snapshot.val();
+  myLibrary = [...data.books];
+  displayBook();
+  console.log(data);
+});
+
+
 
 function Book(name, author, pages, read) {
   this.name = name;
   this.author = author;
   this.pages = pages;
   this.read = read;
-}
-
-function addBookToLibrary(book) {
-  myLibrary.push(book);
 }
 
 function displayBook() {
@@ -69,11 +101,13 @@ new_book.onclick = function () {
   modal.classList.add("clicked");
 
   form.classList.remove("notclicked");
-  const read_status = document.querySelector(".read");
+};
+const read_status = document.querySelector("#read_status");
+  console.log(read_status);
   read_status.onclick = function () {
+    console.log(new_book);
     readStatusUpdate(read_status);
   };
-};
 
 form.onsubmit = function (e) {
   e.preventDefault();
@@ -83,6 +117,10 @@ form.onsubmit = function (e) {
   let read = form.children[3].innerText == "Read" ? true : false;
   const newBook = new Book(name, author, Number(pages), read);
   myLibrary.push(newBook);
+  set(ref(database), {
+    books: myLibrary,
+  });
+
   modal.classList.add("notclicked");
   modal.classList.remove("clicked");
 
@@ -95,7 +133,7 @@ window.onclick = function (e) {
   }
 };
 
-function readStatusUpdate(div, book) {
+function readStatusUpdate(div) {
   if (div.innerText == "Not Read") {
     div.style.backgroundColor = "green";
     div.innerText = "Read";
@@ -103,10 +141,10 @@ function readStatusUpdate(div, book) {
     div.style.backgroundColor = "red";
     div.innerText = "Not Read";
   }
-  if (!book) return;
-  if (div.innerText == "Read") {
-    book.read = true;
-  } else {
-    book.read = false;
-  }
+  // if (!book) return;
+  // if (div.innerText == "Read") {
+  //   book.read = true;
+  // } else {
+  //   book.read = false;
+  // }
 }
